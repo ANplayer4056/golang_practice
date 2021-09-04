@@ -3,6 +3,7 @@ package main
 import (
 	"database/sql"
 	"fmt"
+	"log"
 
 	_ "github.com/go-sql-driver/mysql"
 )
@@ -46,17 +47,22 @@ func deleteUser(db *sql.DB) {
 
 func queryUser(db *sql.DB) {
 	// select 資料
-	result, err := db.Exec("SELECT * from user where id=?", 1)
+	result, err := db.Query("SELECT * from user")
 
-	fmt.Println("db ===> ", result)
+	for result.Next() {
 
-	fmt.Println("&result ===> ", &result)
-	fmt.Println("*result ===> ", *&result)
+		var (
+			id       int
+			username string
+			password string
+		)
 
-	// res := &result
-	// fmt.Printf("ptr = %p\n", &result)
-	var p = &result
-	fmt.Printf("5. main  -- p %T: &p=%p p=&i=%p  *p=i=%v\n", p, &p, p, *p)
+		if err := result.Scan(&id, &username, &password); err != nil {
+			log.Fatal(err)
+		}
+
+		fmt.Printf("%v,%v,%v\n", id, username, password)
+	}
 
 	checkErr(err)
 }
