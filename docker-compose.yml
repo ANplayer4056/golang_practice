@@ -1,0 +1,23 @@
+version: "3.7"
+
+services:
+  mariadb:
+    image: mariadb
+    container_name: mariadb1
+    restart: always
+    volumes:
+      - /DB/my_maria/:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: example
+      MYSQL_DATABASE: backend_user
+    ports:
+      - 3306:3306
+
+  phpserve:
+    image: phpmyadmin
+    container_name: myphp
+    ports:
+      - 8888:80
+    restart: always
+    environment:
+      - PMA_ARBITRARY=1
